@@ -114,7 +114,7 @@ def ntest_ball_sample(rayon, c, theta, iterations):
     
     return vol_in_cone, vol_out_cone, vol_boule
 
-def single_noise_déplacement_epsilon(rayon, epsilon, c, theta, iterations):
+def single_noise_déplacement_epsilon_uniforme(rayon, epsilon, c, theta, iterations):
     count_in_sphere = 0
     count_in_cone = 0
     points_sphere = []
@@ -159,7 +159,7 @@ def single_noise_déplacement_epsilon(rayon, epsilon, c, theta, iterations):
     a = (2*rayon + 1)/2
     b = 1/2
     x = 1 - (epsilon/(2*rayon))**2
-    Vcap = (1/2) * vol_boule * betainc(a, b, x)
+    Vcap = (1/2) * vol_boule * betainc(a, b, x) #On utilise la fonction beta incomplete de la librairie scipy.
     
     Psn = p1 - 1 + 2*(Vcap/vol_boule)
     return Psn
