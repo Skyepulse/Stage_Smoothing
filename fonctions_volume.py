@@ -241,3 +241,20 @@ def visualise_cone(c, theta, iterations):
     ax = fig.add_subplot(111, projection='3d')
     for i in points:
         ax.scatter(i[0], i[1], i[2], color = 'green')
+        
+def diff_p_true_p_single_noise(rayon, epsilon, c, theta, iterations):
+    return(single_noise_déplacement_epsilon_uniforme(rayon, epsilon, c, theta, iterations) - p_true_déplacement_epsilon_uniforme(rayon, epsilon, c, theta, iterations))
+
+r = 1
+epsilon = 0.5
+c = 0
+iterations = 100000
+angles = np.linspace(0, np.pi/2, 100, endpoint = False)
+list_results = []
+for i in range(len(angles)):
+    list_results.append(diff_p_true_p_single_noise(r, epsilon, c, angles[i], iterations))
+
+plt.plot(angles, list_results)
+plt.xlabel('Thetas (radians)')
+plt.ylabel('P_single_noise - P_true')
+plt.show()
