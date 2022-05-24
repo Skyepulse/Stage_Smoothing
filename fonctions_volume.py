@@ -163,3 +163,60 @@ def single_noise_déplacement_epsilon_uniforme(rayon, epsilon, c, theta, iterati
     
     Psn = p1 - 1 + 2*(Vcap/vol_boule)
     return Psn
+
+def p_true_déplacement_epsilon_uniforme(rayon, epsilon, c, theta, iterations):
+    #On parle de vol_deplace/vol_boule où vol_déplacé sont les points tels que après une translation epsilon soient dans la boule
+    #mais pas dans le cone.
+    count_in_sphere = 0
+    count_in_transl = 0
+    points_sphere = []
+    points_transl = []
+    points_not_in_cone = []
+    points_in_cone = []
+    count_not_in_cone = 0
+    
+    #Set de points dans la boule:
+    for count_loops in range(iterations):
+        point = np.random.uniform(c - rayon, c + rayon, 3)
+        distance = np.linalg.norm(point)
+        if distance < rayon:
+            points_sphere.append(point)
+            count_in_sphere += 1
+    vol_boule = np.power(2*rayon, 3) * (count_in_sphere / iterations)
+    
+    #fig = plt.figure(figsize=(6, 6))
+    #ax = fig.add_subplot(111, projection='3d')
+    #for i in points_sphere:
+        #ax.scatter(i[0], i[1], i[2], color = 'orange')
+        
+    #on fait la translation sur x, on teste si on est toujours dans la boule originelle
+    for i in points_sphere:
+        i[0] = i[0] + epsilon
+        point = [i[0], i[1], i[2]]
+        distance = np.linalg.norm(point)
+        if distance < rayon:
+            points_transl.append(point)
+            count_in_transl +=1
+    
+    #on teste si on est en dehors ou non du cone:
+    for point in points_transl:
+        x1 = point[0]
+        x2 = point[1]
+        x3 = point[2]
+        
+        z = x1
+        rho = np.sqrt(x2**2 + x3**2) 
+        if (z > c) and (rho <= z*np.tan(theta)):
+            points_in_cone.append(point)
+        else:
+            count_not_in_cone += 1
+            points_not_in_cone.append(point)
+    #on calcule alors le volume:
+    vol_deplace = vol_boule*(count_not_in_cone/count_in_sphere)
+        
+    p_true = vol_deplace/vol_boule
+        
+    #for i in points_in_cone:
+        #ax.scatter(i[0], i[1], i[2], color = 'green')
+        
+    return p_true
