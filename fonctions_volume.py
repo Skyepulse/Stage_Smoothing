@@ -220,3 +220,22 @@ def p_true_déplacement_epsilon_uniforme(rayon, epsilon, c, theta, iterations):
         #ax.scatter(i[0], i[1], i[2], color = 'green')
         
     return p_true
+
+def visualise_cone(c, theta, iterations):
+    points = []
+    
+    for count_loops in range(iterations):
+        x1 = np.random.uniform(-2.0, 2.0)
+        x2 = np.random.uniform(-2.0, 2.0)
+        x3 = np.random.uniform(-2.0, 2.0)
+        
+        z = x1
+        rho = np.sqrt(x2**2 + x3**2) 
+        if (z > c) and (rho <= z*np.tan(theta)):
+            tuple_ = (x1, x2, x3)
+            points.append(tuple_)
+           
+    fig = plt.figure(figsize=(6, 6))
+    ax = fig.add_subplot(111, projection='3d')
+    for i in points:
+        ax.scatter(i[0], i[1], i[2], color = 'green')
