@@ -14,6 +14,8 @@ from matplotlib import cm
 import colorsys
 from matplotlib.tri import Triangulation
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+from scipy.special import betainc
+
 
 def nSphereVolume(dim, iterations):
     count_in_sphere = 0
