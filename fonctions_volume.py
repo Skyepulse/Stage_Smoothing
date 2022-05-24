@@ -113,3 +113,53 @@ def ntest_ball_sample(rayon, c, theta, iterations):
     vol_out_cone = vol_boule - vol_in_cone
     
     return vol_in_cone, vol_out_cone, vol_boule
+
+def single_noise_déplacement_epsilon(rayon, epsilon, c, theta, iterations):
+    count_in_sphere = 0
+    count_in_cone = 0
+    points_sphere = []
+    points_cone = []
+
+    for count_loops in range(iterations):
+        point = np.random.uniform(-rayon, rayon, 3)
+        distance = np.linalg.norm(point)
+        if distance < rayon:
+            points_sphere.append(point)
+            count_in_sphere += 1
+    #fig = plt.figure(figsize=(6, 6))
+    #ax = fig.add_subplot(111, projection='3d')
+    #for i in points_sphere:
+        #ax.scatter(i[0], i[1], i[2], color = 'green')
+    
+    vol_boule = np.power(2*rayon, 3) * (count_in_sphere / iterations)
+    
+    for point in points_sphere:
+        x1 = point[0]
+        x2 = point[1]
+        x3 = point[2]
+        
+        z = x1
+        rho = np.sqrt(x2**2 + x3**2) 
+        if (z > c) and (rho <= z*np.tan(theta)):
+            count_in_cone += 1
+            tuple_ = (x1, x2, x3)
+            points_cone.append(tuple_)
+    vol_in_cone = vol_boule * (count_in_cone/count_in_sphere)
+    
+    #fig = plt.figure(figsize=(6, 6))
+    #ax = fig.add_subplot(111, projection='3d')
+    #for i in points_cone:
+        #ax.scatter(i[0], i[1], i[2], color = 'orange')
+    vol_out_cone = vol_boule - vol_in_cone
+    
+    #probabilité que les points de la boule ne soient pas dans le cone:
+    p1 = 1 - count_in_cone/count_in_sphere
+    
+    #on déplace de epsilon vers la droite de l'axe du cone
+    a = (2*rayon + 1)/2
+    b = 1/2
+    x = 1 - (epsilon/(2*rayon))**2
+    Vcap = (1/2) * vol_boule * betainc(a, b, x)
+    
+    Psn = p1 - 1 + 2*(Vcap/vol_boule)
+    return Psn
