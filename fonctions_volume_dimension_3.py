@@ -123,7 +123,7 @@ def single_noise_déplacement_epsilon_uniforme(rayon, epsilon, c, theta, iterati
     points_cone = []
 
     for count_loops in range(iterations):
-        point = np.random.uniform(-rayon, rayon, 3)
+        point = np.random.uniform(c - rayon, c + rayon, 3)
         distance = np.linalg.norm(point)
         if distance < rayon:
             points_sphere.append(point)
@@ -158,7 +158,7 @@ def single_noise_déplacement_epsilon_uniforme(rayon, epsilon, c, theta, iterati
     p1 = 1 - count_in_cone/count_in_sphere
     
     #on déplace de epsilon vers la droite de l'axe du cone
-    a = (2*rayon + 1)/2
+    a = (3 + 1)/2 #la dimension ici = 3
     b = 1/2
     x = 1 - (epsilon/(2*rayon))**2
     Vcap = (1/2) * vol_boule * betainc(a, b, x) #On utilise la fonction beta incomplete de la librairie scipy.
